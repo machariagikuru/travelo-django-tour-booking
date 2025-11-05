@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Photo Gallery{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <h1 class="text-center mb-4 fw-bold text-primary">Travel Memories Gallery</h1>
+
+  <!-- Filter Buttons -->
+  <div class="d-flex flex-wrap justify-content-center mb-4 gap-3">
+    <a href="{% url 'gallery' %}" class="btn btn-outline-primary btn-sm rounded-pill px-4 py-2 mx-2 shadow-sm">All</a>
+    {% for key, value in categories %}
+    <a href="?category={{ key }}" class="btn btn-outline-primary btn-sm rounded-pill px-4 py-2 mx-2 shadow-sm">{{ value }}</a>
+    {% endfor %}
+  </div>
+
+  <!-- Gallery Grid -->
+  <div class="row g-4">
+    {% for img in images %}
+    <div class="col-6 col-md-4 col-lg-3 p-2">
+      <a href="{{ img.image.url }}" data-lightbox="gallery" data-title="<strong>{{ img.title }}</strong><br><small class='text-muted'>{{ img.description|default:'' }}</small>">
+        <div class="gallery-img-wrapper shadow rounded overflow-hidden">
+          <img src="{{ img.image.url }}" class="img-fluid rounded gallery-img" alt="{{ img.title }}">
+          <div class="overlay">
+            <div class="overlay-text">{{ img.title }}</div>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% empty %}
+    <p class="text-center text-muted fs-5">No images found.</p>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Lightbox2 CSS/JS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+
+<style>
+  .gallery-img-wrapper {
+    position: relative;
+    cursor: pointer;
+  }
+  .gallery-img {
+    transition: transform 0.3s ease;
+  }
+  .gallery-img-wrapper:hover .gallery-img {
+    transform: scale(1.05);
+    filter: brightness(0.85);
+  }
+  .overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  .gallery-img-wrapper:hover .overlay {
+    opacity: 1;
+  }
+</style>
+{% endblock %}

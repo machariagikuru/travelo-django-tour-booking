@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-7">
+        <div class="card shadow border-0">
+          <div class="card-body p-4">
+            <h3 class="fw-bold text-primary mb-4">Write a Review for {{ destination.destination_name }}</h3>
+
+            <form method="POST">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Name</label>
+                <input type="text" name="name" class="form-control" required>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Rating</label>
+                <select name="rating" class="form-select" required>
+                  <option value="">Select rating</option>
+                  {% for i in "12345" %}
+                  <option value="{{ i }}">{{ i }} ⭐</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Review</label>
+                <textarea name="review" rows="4" class="form-control" placeholder="Share your experience..." required></textarea>
+              </div>
+
+              <div class="text-end">
+                <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm">
+                  <i class="fa fa-paper-plane me-2"></i>Submit Review
+                </button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

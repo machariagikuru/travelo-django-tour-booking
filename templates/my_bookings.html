@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Bookings{% endblock %}
+
+{% block content %}
+
+<div class="container my-5">
+  <h2 class="fw-bold mb-4 text-center">My Bookings</h2>
+
+  {% if bookings|length > 0 %}
+    {% for booking in bookings %}
+      <div class="card border-0 shadow-sm rounded-3 mb-4 
+        {% if booking.status == 'pending' %}border-warning
+        {% elif booking.status == 'confirmed' %}border-success
+        {% elif booking.status == 'completed' %}border-info
+        {% elif booking.status == 'cancelled' %}border-danger
+        {% endif %}"
+        style="border-left: 6px solid 
+        {% if booking.status == 'pending' %}#ffc107
+        {% elif booking.status == 'confirmed' %}#28a745
+        {% elif booking.status == 'completed' %}#0dcaf0
+        {% elif booking.status == 'cancelled' %}#dc3545
+        {% endif %};">
+
+        <div class="card-body p-4">
+          <!-- Header -->
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+              <h5 class="fw-bold mb-1">{{ booking.package.title }}</h5>
+              <small class="text-muted">Booking ID: #{{ booking.id }}</small>
+            </div>
+            <span class="badge px-3 py-2 
+              {% if booking.status == 'pending' %}bg-warning text-dark
+              {% elif booking.status == 'confirmed' %}bg-success
+              {% elif booking.status == 'completed' %}bg-info
+              {% elif booking.status == 'cancelled' %}bg-danger
+              {% endif %}">
+              {{ booking.get_status_display }}
+            </span>
+          </div>
+
+          <!-- Package Info -->
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <img src="{{ booking.package.image.url }}" class="img-fluid rounded" alt="{{ booking.package.title }}">
+            </div>
+            <div class="col-md-9">
+              <p class="mb-2"><i class="fa fa-map-marker-alt text-primary me-2"></i><strong>{{ booking.package.destination }}</strong></p>
+              <p class="mb-2"><i class="fa fa-calendar-alt text-primary me-2"></i>Start Date: {{ booking.start_date|date:"M d, Y" }}</p>
+              <p class="mb-2"><i class="fa fa-users text-primary me-2"></i>{{ booking.number_of_travelers }} Traveler{{ booking.number_of_travelers|pluralize }}</p>
+              <p class="mb-0"><i class="fa fa-bed text-primary me-2"></i>Room Type: {{ booking.room_type }}</p>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="d-flex justify-content-between align-items-center border-top pt-3">
+            <div>
+              <small class="text-muted d-block">Total Amount</small>
+              <h4 class="fw-bold text-primary mb-0">₹{{ booking.total_amount|floatformat:0 }}</h4>
+            </div>
+            <div class="btn-group">
+              <a href="{% url 'booking_confirmation' booking.id %}" class="btn btn-outline-primary rounded-pill btn-sm">
+                <i class="fa fa-eye me-2"></i>View Details
+              </a>
+
+              {% if booking.status != 'cancelled' and booking.status != 'completed' %}
+              <form method="post" action="{% url 'cancel_booking' booking.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger rounded-pill btn-sm">
+                  <i class="fa fa-times me-1"></i>Cancel
+                </button>
+              </form>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <!-- Empty State -->
+    <div class="alert alert-light text-center py-5 rounded-3 border-2 border-secondary">
+      <i class="fa fa-calendar-check fa-3x mb-3 d-block text-muted"></i>
+      <h5 class="fw-bold mb-2">No Bookings Yet</h5>
+      <p class="mb-3">You haven't made any bookings yet. Start exploring our amazing packages!</p>
+      <a href="{% url 'packages' %}" class="btn btn-primary rounded-pill">
+        <i class="fa fa-compass me-2"></i>Browse Packages
+      </a>
+    </div>
+  {% endif %}
+</div>
+
+<style>
+  .btn-primary {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  }
+  .card {
+    border-radius: 15px;
+    transition: all 0.3s ease;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  }
+</style>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow border-0">
+          <div class="card-body p-4">
+            <h3 class="fw-bold text-primary mb-4">Book Your Trip to {{ destination.destination_name }}</h3>
+
+            <form method="POST">
+              {% csrf_token %}
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Full Name</label>
+                  <input type="text" name="name" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Email</label>
+                  <input type="email" name="email" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Phone</label>
+                  <input type="text" name="phone" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Number of Travelers</label>
+                  <input type="number" name="travelers" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Check-in Date</label>
+                  <input type="date" name="in_date" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Check-out Date</label>
+                  <input type="date" name="out_date" class="form-control" required>
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-semibold">Additional Notes</label>
+                  <textarea name="notes" rows="3" class="form-control"></textarea>
+                </div>
+              </div>
+
+              <div class="mt-4 text-end">
+                <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm">
+                  <i class="fa fa-check-circle me-2"></i>Confirm Booking
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

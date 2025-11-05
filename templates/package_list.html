@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Tour Packages{% endblock %}
+
+{% block content %}
+
+  <div class="row justify-content-center pb-4">
+    <div class="col-md-12 heading-section text-center ftco-animate">
+        <span class="subheading mt-3">Top Packages</span>
+        <h2 class="mb-1">Explore Our Tour Packages</h2>
+    </div>
+</div>
+
+<div class="container my-3">
+  <!-- Filter Section with Modern Design -->
+  <div class="filter-wrapper mb-5">
+    <form method="get" class="row g-3 align-items-end">
+      <div class="col-md-3">
+        <label class="form-label fw-bold text-muted small">CATEGORY</label>
+        <select name="category" class="form-select form-select-lg shadow-sm">
+          <option value="">All Categories</option>
+          <option value="honeymoon">Honeymoon</option>
+          <option value="family">Family</option>
+          <option value="adventure">Adventure</option>
+          <option value="weekend">Weekend Getaway</option>
+          <option value="luxury">Luxury</option>
+          <option value="budget">Budget</option>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label fw-bold text-muted small">DESTINATION</label>
+        <input type="text" name="destination" placeholder="Search destination..." class="form-control form-control-lg shadow-sm">
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label fw-bold text-muted small">MAX PRICE</label>
+        <input type="number" name="price" placeholder="₹ Max Budget" class="form-control form-control-lg shadow-sm">
+      </div>
+
+      <div class="col-md-3">
+        <button class="btn btn-primary btn-lg w-100 shadow-sm" type="submit">
+          <i class="fa fa-search me-2"></i>Search Packages
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Packages Grid with Enhanced Cards -->
+  <div class="row g-4">
+    {% for package in packages %}
+    <div class="col-md-6 col-lg-4 mb-5">
+      <div class="package-card h-100 shadow-sm">
+        <div class="package-image-wrapper">
+          <img src="{{ package.image.url }}" class="package-image" alt="{{ package.title }}">
+          <div class="package-badge">
+            <span class="badge bg-gradient-primary">{{ package.get_category_display }}</span>
+          </div>
+          <div class="package-overlay">
+            <a href="{% url 'package_detail' package.id %}" class="btn btn-outline-primary btn-sm rounded-pill">View Details</a>
+          </div>
+        </div>
+        
+        <div class="package-body p-4">
+          <h5 class="package-title mb-3">{{ package.title }}</h5>
+          
+          <div class="package-meta mb-3">
+            <div class="d-flex align-items-center text-muted mb-2">
+              <i class="fa fa-map-marker-alt me-2 text-primary"></i>
+              <span>{{ package.destination }}</span>
+            </div>
+            <div class="d-flex align-items-center text-muted">
+              <i class="fa fa-calendar-alt me-2 text-primary"></i>
+              <span>{{ package.days }} Days, {{ package.nights }} Nights</span>
+            </div>
+          </div>
+
+          <p class="package-description text-muted mb-3">
+            {{ package.description|truncatewords:15 }}
+          </p>
+
+          <div class="package-footer d-flex justify-content-between align-items-center">
+            <div class="package-price">
+              <span class="text-muted small">Starting from</span>
+              <h4 class="text-primary fw-bold mb-0">₹{{ package.price }}</h4>
+            </div>
+             <a href="{% url 'booking' package.id %}" class="btn btn-outline-primary btn-sm rounded-pill">Book Now</a><i class="fa fa-arrow-right ms-1"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <div class="alert alert-info text-center py-5">
+        <i class="fa fa-info-circle fa-3x mb-3 d-block"></i>
+        <h5>No packages found matching your criteria</h5>
+        <p class="mb-0">Try adjusting your filters or browse all packages</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+{% endblock %}

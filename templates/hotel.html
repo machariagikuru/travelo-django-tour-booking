@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+   
+  <section class="ftco-section">
+        <div class="row justify-content-center pb-4">
+            <div class="col-md-12 heading-section text-center ftco-animate">
+                <span class="subheading">Top Hotels</span>
+                <h2 class="mb-4">Popular Hotels</h2>
+            </div>
+        </div>
+          <div class="container">
+            <div class="row">
+                  {% for hotel in hotels %}     
+                      <div class="col-md-4 ftco-animate">
+                          <div class="project-wrap hotel">
+                              <a href="#" class="img" style="background-image: url({{hotel.images.url}});">
+                              <span class="price">$ {{hotel.rent}} /{{hotel.rent_for}}</span></a>
+                              <div class="text p-4">
+                                  <span class="days">{{hotel.days}} Days Tour</span>
+                                  <h3><a href="#">{{hotel.hotel_name}}</a></h3>
+                                  <p class="location"><span class="fa fa-map-marker"></span> {{hotel.location}}</p>
+                                  <ul>
+                                  <li><span class="flaticon-mountains"></span>Near {{hotel.near_by}}</li>
+                                  </ul>
+                              </div>
+                          </div>
+                      </div>
+                    {% endfor %}
+              </div>
+          </div>
+
+      </div>
+  </section>
+   
+   
+
+{% endblock %}

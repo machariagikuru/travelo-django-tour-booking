@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- 🟩 Services Section -->
+<section class="ftco-section services-section">
+  <div class="container">
+    <div class="row d-flex">
+      
+      <!-- Right Side Text -->
+      <div class="col-md-6 order-md-last heading-section pl-md-5 ftco-animate d-flex align-items-center">
+        <div class="w-100">
+          <span class="subheading">{{ services_header.subtitle }}</span>
+          <h2 class="mb-4">{{ services_header.title }}</h2>
+          <p>{{ services_header.paragraph_1 }}</p>
+          <p>{{ services_header.paragraph_2 }}</p>
+          <p><a href="{% url 'packages' %}" class="btn btn-primary py-3 px-4">Search Tour</a></p>
+        </div>
+      </div>
+
+      <!-- Left Side Service Cards -->
+      <div class="col-md-6">
+        <div class="row">
+          {% for service in services %}
+          <div class="col-md-12 col-lg-6 d-flex align-self-stretch ftco-animate">
+            <div class="services services-1 {{ service.color_class }} d-block img"
+                 style="background-image: url({{ service.background_image.url }});">
+              <div class="icon d-flex align-items-center justify-content-center">
+                <span class="{{ service.icon_class }}"></span>
+              </div>
+              <div class="media-body">
+                <h3 class="heading mb-3">{{ service.title }}</h3>
+                <p>{{ service.description }}</p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- Destination Categories Marquee -->
+<section class="ftco-section img ftco-select-destination" 
+         style="background-image: url({% static 'images/bg_3.jpg' %}); background-size: cover; background-position: center;">
+  <div class="container text-center position-relative">
+    <div class="row justify-content-center pb-4">
+      <div class="col-md-12 heading-section ftco-animate text-white">
+        <span class="subheading">Travelo Provide Places</span>
+        <h2 class="mb-4 fw-bold display-6">Select Your Destination</h2>
+      </div>
+    </div>
+
+    <!-- 🌍 Marquee Scroll -->
+    <div class="marquee-container">
+      <div class="marquee-track">
+        {% for cat in category %}
+        <div class="marquee-item shadow-lg">
+          <div class="destination-card" 
+               style="background-image: url({{ cat.category_img.url }}); background-size: cover; background-position: center;">
+            <a href="{% url 'destination' %}" class="destination-link d-flex flex-column justify-content-end text-white text-decoration-none">
+              <div class="destination-info p-3 rounded-bottom">
+                <h3 class="fw-bold fs-4 mb-1">{{ cat.category_name }}</h3>
+                <span class="fs-6">{{ cat.is_available }} Tours</span>
+              </div>
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+
+        {# Duplicate for seamless looping #}
+        {% for cat in category %}
+        <div class="marquee-item shadow-lg">
+          <div class="destination-card" 
+               style="background-image: url({{ cat.category_img.url }}); background-size: cover; background-position: center;">
+            <a href="#" class="destination-link d-flex flex-column justify-content-end text-white text-decoration-none">
+              <div class="destination-info p-3 rounded-bottom">
+                <h3 class="fw-bold fs-4 mb-1">{{ cat.category_name }}</h3>
+                <span class="fs-6">{{ cat.is_available }} Tours</span>
+              </div>
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 🟩 Featured Tour Packages -->
+<section class="ftco-section bg-light">
+  <div class="container">
+    <div class="row justify-content-center pb-4">
+      <div class="col-md-12 heading-section text-center ftco-animate">
+        <span class="subheading">Top Packages</span>
+        <h2 class="mb-4">Popular Tours</h2>
+      </div>
+    </div>
+
+    <div class="row">
+      {% for pkg in packages|slice:":3" %}
+      <div class="col-md-4 ftco-animate">
+        <div class="project-wrap">
+          <a href="#" class="img" style="background-image: url({{ pkg.image.url }});">
+            <span class="price">₹{{ pkg.price }} /person</span>
+          </a>
+          <div class="text p-4">
+            <span class="days">{{ pkg.days }} Days, {{ pkg.nights }} Nights</span>
+            <h3>{{ pkg.title }}</h3>
+            <p class="location"><span class="fa fa-map-marker"></span> {{ pkg.destination }}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="text-center mt-4">
+      <a href="{% url 'packages' %}" class="btn btn-primary px-4 py-2">View All Packages</a>
+    </div>
+  </div>
+</section>
+
+<!-- 🟩 Testimonials Carousel -->
+<section class="ftco-section testimony-section bg-bottom" style="background-image: url({% static 'images/about-1.png' %});">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row justify-content-center pb-4">
+        <div class="col-md-7 text-center heading-section heading-section-white ftco-animate">
+          <span class="subheading">Testimonial</span>
+          <h2 class="mb-4">Tourist Feedback</h2>
+        </div>
+      </div>
+  
+      <div class="row ftco-animate">
+        <div class="col-md-12 position-relative">
+          <div id="testimonyCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="1000">
+            <div class="carousel-inner">
+              {% for review in reviews %}
+                {% if forloop.counter0|divisibleby:2 %}
+                  <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <div class="row">
+                {% endif %}
+  
+                <div class="col-md-6">
+                  <div class="testimony-wrap py-4 h-100 d-flex flex-column">
+                    <div class="text flex-grow-1">
+                      <p class="star mb-3">
+                        {% for i in "12345" %}
+                          {% if forloop.counter <= review.rating %}
+                            <span class="fa fa-star text-warning"></span>
+                          {% else %}
+                            <span class="fa fa-star-o text-secondary"></span>
+                          {% endif %}
+                        {% endfor %}
+                      </p>
+  
+                      <p class="mb-4" style="min-height: 100px;">{{ review.review }}</p>
+                    </div>
+                    <div class="d-flex align-items-center mt-auto">
+                      <div class="pl-3">
+                        <p class="name mb-0">~ {{ review.name }}</p>
+                        <span class="position">{{ review.destination.destination_name }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+  
+                {% if forloop.counter|divisibleby:2 or forloop.last %}
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- 🟩 Gallery Preview -->
+<section class="ftco-section bg-light">
+  <div class="container">
+    <div class="row justify-content-center pb-4">
+      <div class="col-md-12 heading-section text-center ftco-animate">
+        <span class="subheading">Gallery</span>
+        <h2 class="mb-4">Memorable Moments</h2>
+      </div>
+    </div>
+    <div class="row g-3">
+      {% for img in gallery|slice:":6" %}
+      <div class="col-6 col-md-4 col-lg-2 ftco-animate">
+        <a href="{{ img.image.url }}" data-lightbox="home-gallery" data-title="{{ img.title }}">
+          <img src="{{ img.image.url }}" class="img-fluid rounded shadow-sm" alt="{{ img.title }}">
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+      <a href="{% url 'gallery' %}" class="btn btn-primary px-4 py-2">View Full Gallery</a>
+    </div>
+  </div>
+</section>
+
+<!-- 🟩 Intro Section -->
+<section class="ftco-intro ftco-section ftco-no-pt">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-12 text-center">
+        <div class="img" style="background-image: url({% static 'images/bg_2.jpg' %});">
+          <div class="overlay"></div>
+          <h2>We Are Travelo A Travel Agency</h2>
+          <p>We can manage your dream trip — from flights to adventures.</p>
+          <p class="mb-0"><a href="{% url 'contact' %}" class="btn btn-primary px-4 py-3">Ask For Enquiry</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Lightbox2 CSS/JS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const myCarousel = document.querySelector('#testimonyCarousel');
+      const carousel = new bootstrap.Carousel(myCarousel, {
+        interval: 2500,        // Slide every 3 seconds
+        ride: 'carousel',      // Auto start
+        pause: 'hover',        // Pause on hover
+        wrap: true             // Infinite loop
+      });
+    });
+  </script>
+
+{% endblock %}

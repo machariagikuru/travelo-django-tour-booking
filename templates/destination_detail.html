@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="ftco-section bg-light py-5">
+  <div class="container">
+    <div class="row g-5">
+
+      <!-- Left Column: Main Content -->
+      <div class="col-lg-8">
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+          <img src="{{ destination.images.url }}" alt="{{ destination.destination_name }}" class="img-fluid w-100" style="height: 450px; object-fit: cover;">
+
+          <div class="card-body p-4">
+            <h2 class="fw-bold mb-3 text-primary">{{ destination.destination_name }}</h2>
+            <p class="text-muted mb-2">
+              <i class="fa fa-map-marker text-danger me-2"></i>
+              <strong>Hotel:</strong> {{ destination.hotel }}
+            </p>
+
+            <p class="text-dark mt-3">{{ destination.description }}</p>
+
+            <!-- Highlights -->
+            {% if destination.highlights %}
+            <div class="mt-4">
+              <h5 class="fw-bold text-secondary mb-3"><i class="fa fa-star text-warning me-2"></i>Highlights</h5>
+              <ul class="list-group list-group-flush">
+                {% for highlight in destination.highlights.splitlines %}
+                <li class="list-group-item">
+                  <i class="fa fa-check-circle text-success me-2"></i>{{ highlight }}
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+
+            <!-- Amenities -->
+            <div class="mt-4">
+              <h5 class="fw-bold text-secondary mb-3"><i class="fa fa-concierge-bell text-info me-2"></i>Included Services</h5>
+              <ul class="list-inline">
+                <li class="list-inline-item bg-light px-3 py-2 rounded-3 m-1 border"><i class="fa fa-utensils me-2"></i>Meals</li>
+                <li class="list-inline-item bg-light px-3 py-2 rounded-3 m-1 border"><i class="fa fa-bus me-2"></i>Transport</li>
+                <li class="list-inline-item bg-light px-3 py-2 rounded-3 m-1 border"><i class="fa fa-ticket-alt me-2"></i>Tickets</li>
+                <li class="list-inline-item bg-light px-3 py-2 rounded-3 m-1 border"><i class="fa fa-wifi me-2"></i>Wi-Fi</li>
+              </ul>
+            </div>
+
+            <!-- Availability & Price -->
+            <div class="d-flex flex-wrap align-items-center justify-content-between mt-4 border-top pt-3">
+              <div>
+                <span class="badge bg-info text-dark px-3 py-2 me-2">
+                  <i class="fa fa-clock me-1"></i>{{ destination.days }} Days Tour
+                </span>
+                {% if destination.is_available %}
+                <span class="badge bg-success text-light px-3 py-2">
+                  <i class="fa fa-check me-1"></i>Available
+                </span>
+                {% else %}
+                <span class="badge bg-danger text-light px-3 py-2">
+                  <i class="fa fa-times me-1"></i>Not Available
+                </span>
+                {% endif %}
+              </div>
+
+              <div class="text-end">
+                <span class="fs-5 fw-bold text-primary">${{ destination.price }}</span>
+                <small class="text-muted">/person</small>
+              </div>
+            </div>
+
+            <!-- Book Now Button -->
+            <div class="mt-4">
+              <a href="{% url 'book_trip' destination.id %}" class="btn btn-primary btn-lg px-4 rounded-pill shadow-sm me-3">
+                <i class="fa fa-plane-departure me-2"></i>Book Now
+              </a>
+              <a href="{% url 'submit_review' destination.id %}" class="btn btn-outline-primary btn-lg px-4 rounded-pill shadow-sm">
+                <i class="fa fa-pen me-2"></i>Write a Review
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reviews -->
+        <div class="mt-5">
+          <h4 class="fw-bold mb-3">Traveler Reviews</h4>
+          {% if destination.reviews.all %}
+          {% for review in destination.reviews.all %}
+          <div class="border rounded p-3 mb-3 bg-white shadow-sm">
+            <div class="d-flex justify-content-between">
+              <h6 class="fw-semibold mb-0">{{ review.name }}</h6>
+              <small class="text-warning">
+                {% for i in "12345"|slice:":review.rating"|make_list %}
+                <i class="fa fa-star"></i>
+                {% endfor %}
+              </small>
+            </div>
+            <p class="text-muted mb-1"><small>{{ review.created_at|date:"M d, Y" }}</small></p>
+            <p>{{ review.review }}</p>
+          </div>
+          {% endfor %}
+          {% else %}
+          <p class="text-muted">No reviews yet. Be the first to share your experience!</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Right Column: Extra Info -->
+      <div class="col-lg-4">
+        <div class="card shadow-sm border-0 rounded-4 mb-4">
+          <div class="card-body">
+            <h5 class="fw-bold text-secondary mb-3">
+              <i class="fa fa-map-pin me-2 text-danger"></i>Nearby Attractions
+            </h5>
+            {% if destination.near_by %}
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><i class="fa fa-location-dot text-success me-2"></i>{{destination.near_by}}</li>
+            </ul>
+            {% else %}
+            <p class="text-muted">No nearby attractions listed.</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Hotel Info -->
+        <div class="card shadow-sm border-0 rounded-4 mb-4">
+          <div class="card-body text-center">
+            <h5 class="fw-bold text-secondary mb-3"><i class="fa fa-hotel me-2 text-primary"></i>Hotel Information</h5>
+            <p class="text-dark">{{ destination.hotel }}</p>
+            <span class="badge bg-warning text-dark px-3 py-2">4-Star Property</span>
+            <p class="text-muted mt-2 mb-0"><i class="fa fa-phone me-2"></i>+91 98765 43210</p>
+          </div>
+        </div>
+
+        <!-- Dates -->
+        <div class="card shadow-sm border-0 rounded-4 mb-4">
+          <div class="card-body text-center">
+            <h6 class="fw-bold text-secondary mb-3"><i class="fa fa-calendar me-2"></i>Trip Duration</h6>
+            <p class="mb-1"><strong>In Date:</strong> {{ destination.in_date }}</p>
+            <p class="mb-3"><strong>Out Date:</strong> {{ destination.out_date }}</p>
+            <div class="alert alert-info py-2 px-3 mb-0">
+              You are <strong>5.5 hours ahead</strong> of server time.
+            </div>
+          </div>
+        </div>
+
+        <!-- Map Section -->
+        <div class="card shadow-sm border-0 rounded-4">
+          <div class="card-body text-center">
+            <h6 class="fw-bold text-secondary mb-3"><i class="fa fa-map me-2 text-success"></i>Location Map</h6>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18..." width="100%" height="200" style="border:0; border-radius: 10px;" allowfullscreen=""></iframe>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

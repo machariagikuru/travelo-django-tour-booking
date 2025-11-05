@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+ <section class="ftco-section">
+    <div class="container">
+        <h1 class="text-center mb-5">Explore Our Destinations</h1>
+     <div class="row">
+        {% for dest in destination %}
+         <div class="col-md-4 ftco-animate">
+             <div class="project-wrap">
+                  <a href="{% url 'destination_detail' dest.slug %}" class="img" style="background-image: url({{dest.images.url}});">
+                      <span class="price">$ {{dest.price}}/person</span>
+                  </a>
+                    <div class="text p-4">
+                        <span class="days">{{dest.days}} Days Tour</span>
+                        <h3><a href="{% url 'destination_detail' dest.slug %}">{{dest.destination_name}}</a></h3>
+                        <p class="location"><span class="fa fa-map-marker"></span> {{dest.hotel}}</p>
+                            <ul>
+                                    <li><span class="flaticon-mountains"></span>Near {{dest.near_by}}</li>
+                            </ul>
+                    </div>
+             </div>
+         </div>
+     {% endfor %}
+ </div>
+
+ </div>
+ </div>
+ </div>
+ </section>
+{% endblock %}

@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Search Results - Tour Packages{% endblock %}
+
+{% block content %}
+
+<!-- Search Banner -->
+<section class="page-hero-banner" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 60px 0;">
+  <div class="container text-center text-white">
+    <h1 class="display-5 fw-bold mb-3">Search Results</h1>
+    <p class="lead">Found {{ total_results }} packages matching "{{ query }}"</p>
+  </div>
+</section>
+
+<div class="container my-5">
+  <div class="row">
+    <!-- Filters Sidebar -->
+    <div class="col-lg-3 mb-4">
+      <div class="card border-0 shadow-sm rounded-3 sticky-top" style="top: 20px;">
+        <div class="card-body p-4">
+          <h5 class="fw-bold mb-4">Refine Search</h5>
+
+          <form method="get" id="filter-form">
+            <!-- Search Query -->
+            <div class="mb-4">
+              <label class="form-label fw-bold small text-muted">SEARCH</label>
+              <input type="text" name="q" class="form-control rounded-3" value="{{ query }}" placeholder="Search packages...">
+            </div>
+
+            <!-- Category Filter -->
+            <div class="mb-4">
+              <label class="form-label fw-bold small text-muted">CATEGORY</label>
+              <select name="category" class="form-select form-select-sm rounded-3">
+                <option value="">All Categories</option>
+                <option value="honeymoon">💑 Honeymoon</option>
+                <option value="family">👨‍👩‍👧‍👦 Family</option>
+                <option value="adventure">🏔️ Adventure</option>
+                <option value="weekend">🌴 Weekend Getaway</option>
+                <option value="luxury">✨ Luxury</option>
+                <option value="budget">💰 Budget</option>
+              </select>
+            </div>
+
+            <!-- Price Range -->
+            <div class="mb-4">
+              <label class="form-label fw-bold small text-muted">PRICE RANGE</label>
+              <div class="row g-2">
+                <div class="col-6">
+                  <input type="number" name="min_price" class="form-control form-control-sm rounded-3" placeholder="Min">
+                </div>
+                <div class="col-6">
+                  <input type="number" name="max_price" class="form-control form-control-sm rounded-3" placeholder="Max">
+                </div>
+              </div>
+            </div>
+
+            <!-- Duration -->
+            <div class="mb-4">
+              <label class="form-label fw-bold small text-muted">DURATION</label>
+              <select name="duration" class="form-select form-select-sm rounded-3">
+                <option value="">Any Duration</option>
+                <option value="3">3 Days</option>
+                <option value="5">5 Days</option>
+                <option value="7">7 Days</option>
+                <option value="10">10+ Days</option>
+              </select>
+            </div>
+
+            <!-- Filter Button -->
+            <button type="submit" class="btn btn-primary w-100 rounded-pill mb-2">
+              <i class="fa fa-filter me-2"></i>Apply Filters
+            </button>
+            <a href="{% url 'tours:search_packages' %}" class="btn btn-outline-secondary w-100 rounded-pill">
+              Clear Filters
+            </a>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Results -->
+    <div class="col-lg-9">
+      {% if packages %}
+      <div class="row g-4">
+        {% for package in packages %}
+        <div class="col-md-6 col-lg-4">
+          <div class="package-card h-100 shadow-sm">
+            <div class="package-image-wrapper">
+              <img src="{{ package.image.url }}" class="package-image" alt="{{ package.title }}">
+              <div class="package-badge">
+                <span class="badge bg-gradient-primary">{{ package.get_category_display }}</span>
+              </div>
+              <div class="package-overlay">
+                <a href="{% url 'tours:package_detail' package.id %}" class="btn btn-light btn-sm rounded-pill">
+                  View Details
+                </a>
+              </div>
+            </div>
+            
+            <div class="package-body p-4">
+              <h5 class="package-title mb-3">{{ package.title }}</h5>
+              
+              <div class="package-meta mb-3">
+                <div class="d-flex align-items-center text-muted mb-2">
+                  <i class="fa fa-map-marker-alt me-2 text-primary"></i>
+                  <span>{{ package.destination }}</span>
+                </div>
+                <div class="d-flex align-items-center text-muted">
+                  <i class="fa fa-calendar-alt me-2 text-primary"></i>
+                  <span>{{ package.days }} Days</span>
+                </div>
+              </div>
+
+              <p class="package-description text-muted mb-3">
+                {{ package.description|truncatewords:15 }}
+              </p>
+
+              <div class="package-footer d-flex justify-content-between align-items-center">
+                <div class="package-price">
+                  <h4 class="text-primary fw-bold mb-0">₹{{ package.price }}</h4>
+                </div>
+                <a href="{% url 'tours:booking' package.id %}" class="btn btn-outline-primary btn-sm rounded-pill">
+                  Book <i class="fa fa-arrow-right ms-1"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Pagination -->
+      {% if packages.has_other_pages %}
+      <nav aria-label="Page navigation" class="mt-5">
+        <ul class="pagination justify-content-center">
+          {% if packages.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page=1{{ request.GET.urlencode }}">First</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="?page={{ packages.previous_page_number }}{{ request.GET.urlencode }}">Previous</a>
+          </li>
+          {% endif %}
+
+          {% for num in pages_range %}
+          <li class="page-item {% if num == packages.number %}active{% endif %}">
+            <a class="page-link" href="?page={{ num }}{{ request.GET.urlencode }}">{{ num }}</a>
+          </li>
+          {% endfor %}
+
+          {% if packages.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ packages.next_page_number }}{{ request.GET.urlencode }}">Next</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="?page={{ packages.paginator.num_pages }}{{ request.GET.urlencode }}">Last</a>
+          </li>
+          {% endif %}
+        </ul>
+      </nav>
+      {% endif %}
+
+      {% else %}
+      <!-- No Results -->
+      <div class="alert alert-info text-center py-5 rounded-3">
+        <i class="fa fa-search fa-3x mb-3 d-block text-muted"></i>
+        <h5 class="fw-bold mb-2">No Packages Found</h5>
+        <p class="mb-0">Try adjusting your search criteria or browse all packages</p>
+        <a href="{% url 'tours:packages' %}" class="btn btn-primary mt-3 rounded-pill">
+          Browse All Packages
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  .package-card {
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    background: white;
+    border: none;
+  }
+
+  .package-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15) !important;
+  }
+
+  .package-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    height: 200px;
+  }
+
+  .package-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .package-card:hover .package-image {
+    transform: scale(1.1);
+  }
+
+  .package-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .package-card:hover .package-overlay {
+    opacity: 1;
+  }
+
+  .page-link {
+    color: #667eea;
+  }
+
+  .page-link:hover {
+    background-color: #667eea;
+    color: white;
+  }
+
+  .page-item.active .page-link {
+    background-color: #667eea;
+    border-color: #667eea;
+  }
+</style>
+
+{% endblock %}

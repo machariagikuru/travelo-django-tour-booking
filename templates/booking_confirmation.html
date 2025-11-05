@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Booking Confirmation{% endblock %}
+
+{% block content %}
+
+<!-- Success Banner -->
+<div class="bg-success text-white py-4 mb-5">
+  <div class="container text-center">
+    <i class="fa fa-check-circle fa-3x mb-3 d-block"></i>
+    <h2 class="mb-2">Booking Confirmed!</h2>
+    <p class="mb-0">Your reservation has been successfully created</p>
+  </div>
+</div>
+
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <!-- Main Confirmation Card -->
+    <div class="col-lg-8">
+      <!-- Booking Details -->
+      <div class="card border-0 shadow-lg rounded-3 mb-4">
+        <div class="card-body p-5">
+          <div class="text-center mb-5">
+            <div class="confirmation-badge mb-3">
+              <i class="fa fa-check-circle text-success fa-5x"></i>
+            </div>
+            <h3 class="fw-bold mb-2">Booking Confirmation</h3>
+            <p class="text-muted">Confirmation email has been sent to <strong>{{ booking.email }}</strong></p>
+          </div>
+
+          <!-- Booking ID & Status -->
+          <div class="alert alert-light border-2 border-primary mb-4">
+            <div class="row text-center">
+              <div class="col-md-6 pb-3 pb-md-0 border-md-end">
+                <h6 class="text-muted mb-1">Booking ID</h6>
+                <h4 class="text-primary fw-bold">{{ booking.id }}</h4>
+              </div>
+              <div class="col-md-6">
+                <h6 class="text-muted mb-1">Status</h6>
+                <h4 class="text-warning fw-bold">
+                  <span class="badge bg-warning text-dark px-3 py-2">{{ booking.get_status_display|upper }}</span>
+                </h4>
+              </div>
+            </div>
+          </div>
+
+          <!-- Traveler Information -->
+          <div class="mb-4 pb-4 border-bottom">
+            <h5 class="fw-bold mb-3">Traveler Information</h5>
+            <div class="row">
+              <div class="col-md-6">
+                <p class="text-muted small mb-1">Name</p>
+                <p class="fw-bold">{{ booking.first_name }} {{ booking.last_name }}</p>
+              </div>
+              <div class="col-md-6">
+                <p class="text-muted small mb-1">Email</p>
+                <p class="fw-bold">{{ booking.email }}</p>
+              </div>
+              <div class="col-md-6">
+                <p class="text-muted small mb-1">Phone</p>
+                <p class="fw-bold">{{ booking.phone }}</p>
+              </div>
+              <div class="col-md-6">
+                <p class="text-muted small mb-1">Address</p>
+                <p class="fw-bold">{{ booking.address }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Package Information -->
+          <div class="mb-4 pb-4 border-bottom">
+            <h5 class="fw-bold mb-3">Package Details</h5>
+            <div class="row align-items-center mb-3">
+              <div class="col-md-3">
+                <img src="{{ package.image.url }}" class="img-fluid rounded" alt="{{ package.title }}">
+              </div>
+              <div class="col-md-9">
+                <h6 class="fw-bold mb-2">{{ package.title }}</h6>
+                <p class="mb-1"><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ package.destination }}</p>
+                <p class="mb-0"><i class="fa fa-calendar-alt text-primary me-2"></i>{{ package.days }} Days & {{ package.nights }} Nights</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Travel Details -->
+          <div class="mb-4 pb-4 border-bottom">
+            <h5 class="fw-bold mb-3">Travel Details</h5>
+            <div class="row">
+              <div class="col-md-6">
+                <p class="text-muted small mb-1">Number of Travelers</p>
+                <p class="fw-bold">{{ booking.number_of_travelers }}</p>
+              </div>
+              <div class="col-md-6">
+                <p class="text-muted small mb-1">Room Type</p>
+                <p class="fw-bold">{{ booking.room_type }}</p>
+              </div>
+              {% if booking.special_requests %}
+              <div class="col-12">
+                <p class="text-muted small mb-1">Special Requests</p>
+                <p class="fw-bold">{{ booking.special_requests }}</p>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Price Breakdown -->
+          <div class="mb-4">
+            <h5 class="fw-bold mb-3">Price Breakdown</h5>
+            <table class="table table-borderless">
+              <tbody>
+                <tr>
+                  <td class="text-muted">Package Price (₹{{ package.price }} × {{ booking.number_of_travelers }})</td>
+                  <td class="text-end fw-bold">₹{{ booking.subtotal|floatformat:0 }}</td>
+                </tr>
+                <tr>
+                  <td class="text-muted">GST (18%)</td>
+                  <td class="text-end fw-bold text-danger">₹{{ booking.gst|floatformat:0 }}</td>
+                </tr>
+                <tr class="border-top border-bottom">
+                  <td class="fw-bold">Total Amount</td>
+                  <td class="text-end fw-bold text-primary fs-5">₹{{ booking.total_amount|floatformat:0 }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Payment Instructions -->
+          <div class="alert alert-info mb-4">
+            <h6 class="fw-bold mb-2"><i class="fa fa-info-circle me-2"></i>Next Steps</h6>
+            <ol class="mb-0 ps-3">
+              <li>You will receive payment details via email</li>
+              <li>Complete payment to confirm your booking</li>
+              <li>We'll send you travel itinerary & instructions</li>
+              <li>Enjoy your trip!</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="row gap-2 justify-content-center">
+        <div class="col-md-6">
+          <a href="{% url 'packages' %}" class="btn btn-primary btn-lg w-100 rounded-pill">
+            <i class="fa fa-arrow-left me-2"></i>Continue Booking
+          </a>
+        </div>
+        <div class="col-md-6">
+          <a href="{% url 'my_bookings' %}" class="btn btn-outline-primary btn-lg w-100 rounded-pill">
+            <i class="fa fa-book me-2"></i>View My Bookings
+          </a>
+        </div>
+      </div>
+
+      <!-- Print Option -->
+      <div class="text-center mt-4">
+        <button class="btn btn-sm btn-light" onclick="window.print()">
+          <i class="fa fa-print me-2"></i>Print Confirmation
+        </button>
+      </div>
+    </div>
+
+    <!-- Sidebar - Important Info -->
+    <div class="col-lg-4 mt-4 mt-lg-0">
+      <div class="card border-0 shadow-lg rounded-3 position-sticky" style="top: 20px;">
+        <div class="card-body p-4">
+          <h5 class="fw-bold mb-4">Important Information</h5>
+
+          <div class="info-item mb-4 pb-4 border-bottom">
+            <h6 class="text-muted mb-2"><i class="fa fa-envelope text-primary me-2"></i>Confirmation Email</h6>
+            <p class="small mb-0">Check your email for booking confirmation and payment instructions</p>
+          </div>
+
+          <div class="info-item mb-4 pb-4 border-bottom">
+            <h6 class="text-muted mb-2"><i class="fa fa-phone text-primary me-2"></i>Need Help?</h6>
+            <p class="small mb-2">Contact our team:</p>
+            <p class="fw-bold mb-0">
+              <a href="tel:+919876543210" class="text-decoration-none">+91 9876543210</a>
+            </p>
+          </div>
+
+          <div class="info-item mb-4 pb-4 border-bottom">
+            <h6 class="text-muted mb-2"><i class="fa fa-calendar text-primary me-2"></i>Cancellation Policy</h6>
+            <p class="small mb-0">Free cancellation up to 7 days before travel date</p>
+          </div>
+
+          <div class="alert alert-success">
+            <small><i class="fa fa-check-circle me-2"></i>Your booking is secure & confirmed</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .confirmation-badge {
+    display: inline-block;
+  }
+
+  .bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  }
+
+  .btn-outline-primary {
+    color: #667eea;
+    border-color: #667eea;
+  }
+
+  .btn-outline-primary:hover {
+    background: #667eea;
+    border-color: #667eea;
+  }
+
+  @media print {
+    .btn, .alert-info {
+      display: none;
+    }
+  }
+</style>
+
+{% endblock %}
