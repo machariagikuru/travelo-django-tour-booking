@@ -74,7 +74,19 @@ Built with a clean UI, interactive animations, and a premium orange theme (`#f15
     STATIC_URL = '/static/'
     STATICFILES_DIRS = [BASE_DIR / 'static']
 
+## 🖼️ Screenshots
+
+| Homepage | Destinations | Popular Tours |
+|-----------|---------------|---------------|
+| ![Home](https://github.com/sksair301/travelo-django-tour-booking/blob/788c86416a9a4d61bfd5ef3ee66cb39fe2d1b854/s-1.png) | ![Destinations](media/screenshots/s-4.png) | ![Popular Tours](media/screenshots/s-3.png) |
+
+| Tour Packages | Tour Detail Page | Hotels | Hotel Detail Page |
+|----------------|------------------|---------|-------------------|
+| ![Packages](media/screenshots/s-2.png) | ![Tour Detail](media/screenshots/s-1.png) | ![Hotels](media/screenshots/s-6.png) | ![Hotel Detail](media/screenshots/s-7.png) |
+
+
 
 
   
+
 
