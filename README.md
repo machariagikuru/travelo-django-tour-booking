@@ -1,10 +1,17 @@
-# Travelo - Django Tour & Travel Booking Website
+<div align="center">
 
-**Travelo** is a modern, fully responsive Django-based travel and tour booking website.  
-It features dynamic admin-controlled sections like hero banners, service highlights, hotel listings, and image galleries.  
-Built with a clean UI, interactive animations, and a premium orange theme (`#f15d30`).
+# **Travelo – Django Tour & Travel Booking Website**
 
----
+**Travelo** is a modern, fully responsive Django-based travel and tour booking platform.  
+It offers dynamic content management through Django Admin for hero banners, services, hotels, and galleries.  
+Designed with a premium orange theme (`#f15d30`) and enhanced by animations for a delightful travel experience.
+
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](#)
+[![Django](https://img.shields.io/badge/Django-5.x-092E20?logo=django&logoColor=white)](#)
+[![Bootstrap](https://img.shields.io/badge/Bootstrap-5-7952B3?logo=bootstrap&logoColor=white)](#)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](#)
+
+</div>
 
 ##  Features
 
@@ -88,6 +95,7 @@ Built with a clean UI, interactive animations, and a premium orange theme (`#f15
 
 
   
+
 
 
 
